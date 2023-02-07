@@ -4,7 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class GuestDataBase(context: Context, version: Int) : SQLiteOpenHelper(context, NAME, null, VERSION) {
+class GuestDataBase(context: Context) : SQLiteOpenHelper(context, NAME, null, VERSION) {
 
         companion object{
             private const val NAME = "guestdb"
