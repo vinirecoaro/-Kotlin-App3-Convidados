@@ -6,24 +6,24 @@ import com.example.app3_convidados.constants.DataBaseConstants
 import com.example.app3_convidados.model.GuestModel
 import java.sql.DatabaseMetaData
 
-class GuestRepository private constructor(context: Context){
+class GuestRepository private constructor(context: Context) {
 
     private val guestDataBase = GuestDataBase(context)
 
     //Singleton
-    companion object{
+    companion object {
         private lateinit var repository: GuestRepository
 
         fun getInstance(context: Context): GuestRepository {
-            if (!Companion::repository.isInitialized){
+            if (!Companion::repository.isInitialized) {
                 repository = GuestRepository(context)
             }
             return repository
         }
     }
 
-    fun insert(guest: GuestModel): Boolean{
-        return try{
+    fun insert(guest: GuestModel): Boolean {
+        return try {
             val db = guestDataBase.writableDatabase
             val presence = if (guest.presence) 1 else 0
             val values = ContentValues()
@@ -31,12 +31,12 @@ class GuestRepository private constructor(context: Context){
             values.put(DataBaseConstants.GUEST.COLUMNS.PRESENCE, presence)
             db.insert("Guest", null, values)
             true
-        }catch (e: Exception){
+        } catch (e: Exception) {
             false
         }
     }
 
-    fun update(guest: GuestModel):Boolean{
+    fun update(guest: GuestModel): Boolean {
         return try {
             val db = guestDataBase.writableDatabase
             val presence = if (guest.presence) 1 else 0
@@ -49,10 +49,24 @@ class GuestRepository private constructor(context: Context){
             val args = arrayOf(guest.id.toString())
             db.update(DataBaseConstants.GUEST.TABLE_NAME, values, selection, args)
             true
-        }catch (e: Exception){
+        } catch (e: Exception) {
             false
         }
 
     }
 
+    fun delete(id: Int): Boolean {
+        return try {
+            val db = guestDataBase.writableDatabase
+
+            val selection = DataBaseConstants.GUEST.COLUMNS.ID + " = ?"
+            val args = arrayOf(id.toString())
+
+            db.delete(DataBaseConstants.GUEST.TABLE_NAME, selection, args)
+            true
+        } catch (e: Exception) {
+            false
+        }
+
+    }
 }
