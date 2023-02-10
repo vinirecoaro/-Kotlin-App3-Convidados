@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.app3_convidados.databinding.FragmentAllGuestsBinding
 import com.example.app3_convidados.view.adapter.GuestsAdapter
+import com.example.app3_convidados.view.listener.OnGuestListener
 import com.example.app3_convidados.viewmodel.AllGuestsViewModel
 
 class AllGuestsFragment : Fragment() {
@@ -18,6 +20,7 @@ class AllGuestsFragment : Fragment() {
     private var _binding: FragmentAllGuestsBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: AllGuestsViewModel
+    private val adapter = GuestsAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, b: Bundle?): View {
@@ -28,7 +31,21 @@ class AllGuestsFragment : Fragment() {
         binding.recyclerAllGuests.layoutManager = LinearLayoutManager(context)
 
         //Adapter
-        binding.recyclerAllGuests.adapter = GuestsAdapter()
+        binding.recyclerAllGuests.adapter = adapter
+
+        val listener = object : OnGuestListener{
+            override fun onClick(id: Int) {
+                Toast.makeText(context, "Alow, fui clicado", Toast.LENGTH_SHORT).show()
+
+            }
+
+            override fun onDelete(id: Int) {
+                TODO("Not yet implemented")
+            }
+
+        }
+
+        adapter.attachListener(listener)
 
         viewModel.getAll()
         observe()
@@ -43,7 +60,7 @@ class AllGuestsFragment : Fragment() {
 
     private fun observe() {
         viewModel.guests.observe(viewLifecycleOwner) {
-            val s = ""
+            adapter.updateGuests(it)
         }
     }
 
