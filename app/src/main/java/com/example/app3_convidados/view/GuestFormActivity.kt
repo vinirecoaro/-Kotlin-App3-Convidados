@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.example.app3_convidados.R
+import com.example.app3_convidados.constants.DataBaseConstants
 import com.example.app3_convidados.databinding.ActivityGuestFormBinding
 import com.example.app3_convidados.model.GuestModel
 import com.example.app3_convidados.viewmodel.GuestFormViewModel
@@ -23,6 +24,8 @@ class GuestFormActivity : AppCompatActivity(), View.OnClickListener {
 
         binding.buttonSave.setOnClickListener(this)
         binding.radioPresent.isChecked = true
+
+        loadData()
     }
 
     override fun onClick(v: View) {
@@ -31,6 +34,14 @@ class GuestFormActivity : AppCompatActivity(), View.OnClickListener {
             val presence = binding.radioPresent.isChecked
             val model = GuestModel(0, name, presence)
             viewModel.insert(model)
+        }
+    }
+
+    private fun loadData(){
+        val bundle = intent.extras
+        if(bundle != null){
+            val guestId = bundle.getInt(DataBaseConstants.GUEST.ID)
+            viewModel.get(guestId)
         }
     }
 }
